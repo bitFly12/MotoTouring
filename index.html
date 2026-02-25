@@ -1,80 +1,1566 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dolomiti Adventure Ride</title>
+    <title>Dolomiti Adventure Ride - Premium Moto Tour nelle Dolomiti</title>
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: url('data:image/png;base64,[insert_base64_carbon_fiber_texture_here]') repeat;
-            color: white;
+            padding: 0;
+            box-sizing: border-box;
         }
-        header {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
+
+        :root {
+            --primary: #c41e3a;
+            --primary-dark: #8b1528;
+            --accent: #f4a460;
+            --dark: #0a0a0a;
+            --light: #f8f8f8;
+            --gray-light: #e8e8e8;
+            --gray-dark: #2a2a2a;
+            --carbon: #1a1a1a;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+            overflow-x: hidden;
+            background: var(--dark);
+            color: #333;
+        }
+
+        /* CARBON FIBER PATTERN */
+        @keyframes carbon-shift {
+            0%, 100% { background-position: 0 0; }
+            50% { background-position: 50px 50px; }
+        }
+
+        .carbon-bg {
+            background: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255,255,255,.03) 35px, rgba(255,255,255,.03) 70px),
+                linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            position: relative;
+        }
+
+        /* ANIMATED BACKGROUND ELEMENTS */
+        .floating-moto {
             position: fixed;
+            font-size: 15vw;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .floating-moto-1 { top: -5%; left: -10%; animation-delay: 0s; }
+        .floating-moto-2 { top: 20%; right: -15%; animation-delay: 5s; }
+        .floating-moto-3 { bottom: 10%; left: 5%; animation-delay: 10s; }
+        .floating-moto-4 { top: 50%; right: 2%; animation-delay: 15s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+            25% { transform: translateY(-30px) translateX(20px) rotate(5deg); }
+            50% { transform: translateY(-60px) translateX(-30px) rotate(-5deg); }
+            75% { transform: translateY(-30px) translateX(30px) rotate(3deg); }
+        }
+
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0;
             width: 100%;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--carbon) 100%);
+            backdrop-filter: blur(10px);
+            background-color: rgba(10, 10, 10, 0.95);
+            padding: 1rem 2rem;
+            z-index: 999;
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .nav-logo::before {
+            content: '🏍️';
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(196, 30, 58, 0.5));
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* HAMBURGER */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
             z-index: 1000;
         }
-        nav { 
-            display: flex; 
-            justify-content: space-between; 
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: 0.3s;
         }
+
+        @media (max-width: 768px) {
+            nav ul { 
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                background: linear-gradient(135deg, rgba(10,10,10,0.98), rgba(15,15,15,0.98));
+                gap: 0;
+                display: none;
+                backdrop-filter: blur(10px);
+                border-bottom: 2px solid var(--primary);
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav a {
+                padding: 1rem;
+                border-bottom: 1px solid rgba(196,30,58,0.2);
+                display: block;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        /* HERO SECTION */
         .hero {
-            background: linear-gradient(to right, #1e3c72, #2a5298);
-            height: 100vh;
+            margin-top: 70px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 50%, #c41e3a 100%);
+            position: relative;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
+            color: white;
         }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(196,30,58,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(244,164,96,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '🏍️';
+            position: absolute;
+            font-size: 40vw;
+            opacity: 0.05;
+            right: -10%;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: rotateHero 30s linear infinite;
+        }
+
+        @keyframes rotateHero {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            padding: 2rem;
+            animation: slideInHero 1s ease-out;
+        }
+
+        @keyframes slideInHero {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .hero h1 {
-            font-size: 3em;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            letter-spacing: -2px;
         }
-        .animated-bike {
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-decoration: none;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            transition: left 0.3s;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #ff2e5e 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(196,30,58,0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(196,30,58,0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary);
+            border-color: white;
+        }
+
+        /* SECTIONS */
+        section {
+            padding: 80px 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        section h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 3rem;
+            text-align: center;
+            font-weight: 900;
+            letter-spacing: -1px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* SECTION BACKGROUNDS */
+        #about {
+            background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+            color: var(--dark);
+        }
+
+        #about::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(196,30,58,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        #tours {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--carbon) 100%);
+            color: white;
+            position: relative;
+        }
+
+        #tours::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -200px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(244,164,96,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        #features {
+            background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+            color: var(--dark);
+        }
+
+        #features::before {
+            content: '';
             position: absolute;
             bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: slide 10s infinite;
+            left: 0;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(196,30,58,0.08) 0%, transparent 70%);
+            border-radius: 50%;
         }
-        @keyframes slide {
+
+        #founders {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--carbon) 100%);
+            color: white;
+        }
+
+        #founders::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(244,164,96,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        #book {
+            background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+            color: var(--dark);
+        }
+
+        #contact {
+            background: linear-gradient(135deg, var(--dark) 0%, #000 100%);
+            color: white;
+        }
+
+        /* ABOUT SECTION - DYNAMIC CARDS */
+        .about-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        .about-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-left: 5px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(196,30,58,0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .about-card:hover::before {
+            left: 100%;
+        }
+
+        .about-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 70px rgba(196,30,58,0.2);
+            border-left-color: var(--accent);
+        }
+
+        .about-card h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .about-card p {
+            color: #666;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        /* TOURS SECTION - 3D EFFECT CARDS */
+        .tours-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .tour-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid rgba(244,164,96,0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .tour-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--primary));
+            animation: slideAcross 3s infinite;
+        }
+
+        @keyframes slideAcross {
             0% { transform: translateX(-100%); }
-            50% { transform: translateX(0); }
             100% { transform: translateX(100%); }
         }
-        section {
-            padding: 50px 20px;
-            text-align: center;
+
+        .tour-card:hover {
+            transform: translateY(-20px) rotateX(5deg);
+            box-shadow: 0 30px 80px rgba(196,30,58,0.3);
+            border-color: var(--accent);
         }
-        footer {
-            background: rgba(0, 0, 0, 0.7);
+
+        .tour-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #ff2e5e 100%);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tour-header::after {
+            content: '🏔️';
+            position: absolute;
+            right: -20px;
+            top: -20px;
+            font-size: 8rem;
+            opacity: 0.1;
+        }
+
+        .tour-header h3 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            z-index: 2;
+            position: relative;
+        }
+
+        .tour-header p {
+            color: rgba(255,255,255,0.9);
+            z-index: 2;
+            position: relative;
+        }
+
+        .tour-body {
+            padding: 2rem;
+            position: relative;
+        }
+
+        .tour-body ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .tour-body li {
+            padding: 0.8rem 0;
+            color: rgba(255,255,255,0.8);
+            border-bottom: 1px solid rgba(244,164,96,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .tour-body li::before {
+            content: '✓';
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .tour-price {
+            font-size: 2.2rem;
+            color: var(--accent);
+            font-weight: 900;
+            margin: 1.5rem 0;
+            text-shadow: 0 5px 15px rgba(244,164,96,0.3);
+        }
+
+        /* FEATURES GRID - ANIMATED ICONS */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, white 0%, #f5f5f5 100%);
+            padding: 2rem;
+            border-radius: 15px;
             text-align: center;
-            padding: 20px;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(196,30,58,0.1) 0%, rgba(244,164,96,0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+            border-color: var(--primary);
+        }
+
+        .feature-item:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: bounceIcon 2s infinite;
+        }
+
+        @keyframes bounceIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .feature-item:nth-child(2) .feature-icon { animation-delay: 0.2s; }
+        .feature-item:nth-child(3) .feature-icon { animation-delay: 0.4s; }
+        .feature-item:nth-child(4) .feature-icon { animation-delay: 0.6s; }
+        .feature-item:nth-child(5) .feature-icon { animation-delay: 0.8s; }
+        .feature-item:nth-child(6) .feature-icon { animation-delay: 1s; }
+
+        .feature-item h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            font-weight: 800;
+        }
+
+        .feature-item p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* FOUNDERS SECTION */
+        .founders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        .founder-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            border: 2px solid rgba(244,164,96,0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .founder-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(244,164,96,0.1) 50%, transparent 70%);
+            animation: shine 3s infinite;
+            opacity: 0;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .founder-card:hover::before {
+            opacity: 1;
+        }
+
+        .founder-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 50px rgba(196,30,58,0.2);
+        }
+
+        .founder-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .founder-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .founder-info {
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(10,10,10,0.9) 0%, rgba(15,15,15,0.9) 100%);
+            position: relative;
+            z-index: 2;
+        }
+
+        .founder-info h3 {
+            color: var(--accent);
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        .founder-info p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+
+        /* BOOKING FORM */
+        .booking-form {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 5;
+        }
+
+        .booking-form::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--primary));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 200% 0; }
+            50% { background-position: 0 0; }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f8f8f8;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(196,30,58,0.2);
+            background: white;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* CONTACT SECTION */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid rgba(244,164,96,0.3);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 40px rgba(196,30,58,0.2);
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-card h3 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card p {
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* QUALITY OF LIFE FEATURES */
+        .qol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+
+        .qol-item {
+            background: linear-gradient(135deg, white 0%, #f5f5f5 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qol-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(196,30,58,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .qol-item:hover {
+            transform: translateX(10px);
+            border-left-color: var(--accent);
+        }
+
+        .qol-item:hover::before {
+            opacity: 1;
+        }
+
+        .qol-item h4 {
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+            font-weight: 700;
+        }
+
+        .qol-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, #000 0%, var(--carbon) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 2px solid var(--primary);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.03) 35px, rgba(255,255,255,.03) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255,255,255,.02) 35px, rgba(255,255,255,.02) 70px);
+            pointer-events: none;
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            position: relative;
+            z-index: 2;
+            line-height: 1.6;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 0;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            section {
+                padding: 50px 1rem;
+            }
+
+            section h2 {
+                margin-bottom: 2rem;
+            }
+
+            .tours-container {
+                grid-template-columns: 1fr;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* SCROLL ANIMATION */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div><h1>Dolomiti Adventure Ride</h1></div>
-            <div><a href="#" style="color: white">Home</a> | <a href="#" style="color: white">About</a></div>
-        </nav>
-    </header>
-    <div class="hero">
-        <h1>Join the Adventure</h1>
-        <p>Experience the thrill of riding through the Dolomites!</p>
-        <button style="padding: 10px 20px;">Start Your Journey</button>
-        <img class="animated-bike" src="data:image/png;base64,[insert_base64_bike_image_here]" alt="Animated Motorcycle">
-    </div>
-    <section>
-        <h2>About Us</h2>
-        <p>Dolomiti Adventure Ride offers unforgettable experiences for motorcycle enthusiasts.</p>
+    <!-- FLOATING BACKGROUND ELEMENTS -->
+    <div class="floating-moto floating-moto-1">🏍️</div>
+    <div class="floating-moto floating-moto-2">🏍️</div>
+    <div class="floating-moto floating-moto-3">🏍️</div>
+    <div class="floating-moto floating-moto-4">🏍️</div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-logo">Dolomiti Adventure Ride</div>
+        <ul id="navMenu">
+            <li><a href="#about">Chi Siamo</a></li>
+            <li><a href="#tours">Tour</a></li>
+            <li><a href="#features">Servizi</a></li>
+            <li><a href="#founders">Fondatori</a></li>
+            <li><a href="#book">Prenota</a></li>
+            <li><a href="#contact">Contatti</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Vivi le Dolomiti Come un Vero Rider</h1>
+            <p>Tour Guidati Premium per Motociclisti Esperti • Esperienze Indimenticabili</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="document.getElementById('tours').scrollIntoView({behavior: 'smooth'})">
+                    Scopri i Tour
+                </button>
+                <button class="btn btn-secondary" onclick="document.getElementById('book').scrollIntoView({behavior: 'smooth'})">
+                    Prenota Ora
+                </button>
+            </div>
+        </div>
     </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about">
+        <div class="container">
+            <h2>Chi Siamo</h2>
+            <div class="about-content">
+                <div class="about-card fade-in">
+                    <h3>🎯 La Nostra Missione</h3>
+                    <p>Creiamo esperienze premium dedicate ai motociclisti che vogliono vivere le Dolomiti come veri rider, senza pensare all'organizzazione. Qualità, sicurezza e esclusività in ogni dettaglio.</p>
+                </div>
+
+                <div class="about-card fade-in" style="animation-delay: 0.2s;">
+                    <h3>👥 Il Nostro Target</h3>
+                    <p>Motociclisti 30-60 anni con medio-alta capacità di spesa, amanti dei passi di montagna. Principalmente italiani, tedeschi e austriaci con esperienza di guida consolidata.</p>
+                </div>
+
+                <div class="about-card fade-in" style="animation-delay: 0.4s;">
+                    <h3>⭐ Perché Sceglierci</h3>
+                    <p>Itinerari esclusivi studiati da esperti locali, guide certificate, hotel 4 stelle, van di supporto, assistenza h24 e massimo 8 moto per garantire esclusività assoluta.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOURS SECTION -->
+    <section id="tours">
+        <div class="container">
+            <h2>I Nostri Tour Premium</h2>
+            <div class="tours-container">
+                <div class="tour-card fade-in">
+                    <div class="tour-header">
+                        <h3>🏔️ Passi Epici</h3>
+                        <p>3 Giorni • Esperienza Introduttiva</p>
+                    </div>
+                    <div class="tour-body">
+                        <ul>
+                            <li>Passo del Pordoi</li>
+                            <li>Passo della Sella</li>
+                            <li>Falzarego e Tre Croci</li>
+                            <li>Roadbook Digitale + GPX</li>
+                            <li>Hotel 4 Stelle</li>
+                            <li>Guida Certificata</li>
+                        </ul>
+                        <div class="tour-price">€ 895</div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Prenota Ora</button>
+                    </div>
+                </div>
+
+                <div class="tour-card fade-in" style="animation-delay: 0.2s;">
+                    <div class="tour-header">
+                        <h3>⚡ Dolomiti Extreme</h3>
+                        <p>5 Giorni • Esperienza Completa</p>
+                    </div>
+                    <div class="tour-body">
+                        <ul>
+                            <li>Tutti i Passi Principali</li>
+                            <li>Strade Tecniche e Panoramiche</li>
+                            <li>Degustazioni Tipiche</li>
+                            <li>Fotografo Professionista</li>
+                            <li>Van di Supporto Tecnico</li>
+                            <li>Assistenza Meccanica</li>
+                        </ul>
+                        <div class="tour-price">€ 1.495</div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Prenota Ora</button>
+                    </div>
+                </div>
+
+                <div class="tour-card fade-in" style="animation-delay: 0.4s;">
+                    <div class="tour-header">
+                        <h3>👑 Luxury Alpine Ride</h3>
+                        <p>7 Giorni • Esperienza Esclusiva</p>
+                    </div>
+                    <div class="tour-body">
+                        <ul>
+                            <li>Itinerario Personalizzabile</li>
+                            <li>Massimo 8 Moto</li>
+                            <li>Hotel 5 Stelle</li>
+                            <li>Cena Gourmet Inclusa</li>
+                            <li>Video Ricordo Professionale</li>
+                            <li>Certificato Master Rider</li>
+                        </ul>
+                        <div class="tour-price">€ 2.495</div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Prenota Ora</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section id="features">
+        <div class="container">
+            <h2>I Nostri Servizi Premium</h2>
+            <div class="features-grid">
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">🗺️</div>
+                    <h3>Itinerari Esclusivi</h3>
+                    <p>Percorsi studiati da esperti locali non trovabili in nessun'altra guida turistica</p>
+                </div>
+
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">🏨</div>
+                    <h3>Hotel Premium</h3>
+                    <p>Strutture 4-5 stelle selezionate con garage custodito e servizi moto-friendly</p>
+                </div>
+
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">🛣️</div>
+                    <h3>Strade Tecniche</h3>
+                    <p>Percorsi sicuri ma impegnativi, perfetti per motociclisti esperti</p>
+                </div>
+
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">👨‍✈️</div>
+                    <h3>Guide Certificate</h3>
+                    <p>Guide motocicliste professionali e certificate, sempre davanti al gruppo</p>
+                </div>
+
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">📱</div>
+                    <h3>Roadbook Digitale</h3>
+                    <p>Tracce GPX personalizzate e roadbook digitale per massima autonomia</p>
+                </div>
+
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">🚐</div>
+                    <h3>Van di Supporto</h3>
+                    <p>Assistenza tecnica a bordo durante tutto il tour</p>
+                </div>
+
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">📷</div>
+                    <h3>Fotografo Professionista</h3>
+                    <p>Video ricordo e foto professionali di tutta l'esperienza</p>
+                </div>
+
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Assicurazione Inclusa</h3>
+                    <p>Copertura assicurativa base inclusa nel pacchetto</p>
+                </div>
+
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">☎️</div>
+                    <h3>Assistenza H24</h3>
+                    <p>Supporto telefonico disponibile 24 ore su 24 durante il tour</p>
+                </div>
+
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">👥</div>
+                    <h3>Gruppi Ristretti</h3>
+                    <p>Massimo 8 moto per garantire esclusività e sicurezza</p>
+                </div>
+
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">🍽️</div>
+                    <h3>Degustazioni Tipiche</h3>
+                    <p>Soste in rifugi selezionati con cucina tipica locale</p>
+                </div>
+
+                <div class="feature-item fade-in">
+                    <div class="feature-icon">🏅</div>
+                    <h3>Certificato Rider</h3>
+                    <p>Certificato esclusivo "Dolomiti Master Rider" al termine del tour</p>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 4rem;">100+ Vantaggi di Qualità della Vita</h2>
+            <div class="qol-grid">
+                <div class="qol-item fade-in"><h4>1. Nessuna Preoccupazione</h4><p>Tutta l'organizzazione è gestita da noi</p></div>
+                <div class="qol-item fade-in"><h4>2. Percorsi Sicuri</h4><p>Briefing sicurezza ogni mattina</p></div>
+                <div class="qol-item fade-in"><h4>3. Monitoraggio Meteo</h4><p>Percorsi alternativi se necessario</p></div>
+                <div class="qol-item fade-in"><h4>4. Comunità Esclusiva</h4><p>Community privata post-viaggio con altri rider</p></div>
+                <div class="qol-item fade-in"><h4>5. Assistenza Meccanica</h4><p>Supporto tecnico durante il tour</p></div>
+                <div class="qol-item fade-in"><h4>6. Foto Professionali</h4><p>Ricordi professionali dell'esperienza</p></div>
+                <div class="qol-item fade-in"><h4>7. Hotel Selezionati</h4><p>Strutture 4 stelle con garage custodito</p></div>
+                <div class="qol-item fade-in"><h4>8. Massima 8 Moto</h4><p>Esperienze intime e esclusive</p></div>
+                <div class="qol-item fade-in"><h4>9. Guida Esperta</h4><p>Professionista certificato che conosce ogni strada</p></div>
+                <div class="qol-item fade-in"><h4>10. Itinerari Esclusivi</h4><p>Percorsi non trovabili altrove</p></div>
+                <div class="qol-item fade-in"><h4>11. Roadbook Digitale</h4><p>Tracce GPS complete e personalizzate</p></div>
+                <div class="qol-item fade-in"><h4>12. Van di Supporto</h4><p>Assistenza sempre a portata di mano</p></div>
+                <div class="qol-item fade-in"><h4>13. Assicurazione Base</h4><p>Protezione inclusa nel prezzo</p></div>
+                <div class="qol-item fade-in"><h4>14. Assistenza 24/7</h4><p>Numero da chiamare in qualsiasi momento</p></div>
+                <div class="qol-item fade-in"><h4>15. Degustazioni Tipiche</h4><p>Soste gastronomiche in rifugi selezionati</p></div>
+                <div class="qol-item fade-in"><h4>16. Gadget Personalizzati</h4><p>Maglia tecnica Dolomiti Adventure Ride</p></div>
+                <div class="qol-item fade-in"><h4>17. Certificato Master Rider</h4><p>Attestato esclusivo per i nostri rider</p></div>
+                <div class="qol-item fade-in"><h4>18. Video Ricordo</h4><p>Filmato professionale del vostro viaggio</p></div>
+                <div class="qol-item fade-in"><h4>19. Compagnia Selezionata</h4><p>Rider con livello di guida simile</p></div>
+                <div class="qol-item fade-in"><h4>20. Strade Panoramiche</h4><p>Vedute mozzafiato ad ogni curva</p></div>
+                <div class="qol-item fade-in"><h4>21. Percorsi Tecnici</h4><p>Curve impegnanti per veri appassionati</p></div>
+                <div class="qol-item fade-in"><h4>22. Nessun Traffico</h4><p>Strade scelte per evitare congestioni</p></div>
+                <div class="qol-item fade-in"><h4>23. Orari Flessibili</h4><p>Partenze adatte ai vostri impegni</p></div>
+                <div class="qol-item fade-in"><h4>24. Briefing Giornaliero</h4><p>Informazioni dettagliate ogni mattina</p></div>
+                <div class="qol-item fade-in"><h4>25. Meccanico a Bordo</h4><p>Esperto disponibile durante tutto il tour</p></div>
+                <div class="qol-item fade-in"><h4>26. Pause Strategiche</h4><p>Soste pianificate nei posti migliori</p></div>
+                <div class="qol-item fade-in"><h4>27. Rifornimento Organizzato</h4><p>Punti carburante pianificati</p></div>
+                <div class="qol-item fade-in"><h4>28. Mappe Dettagliate</h4><p>Informazioni su ogni strada</p></div>
+                <div class="qol-item fade-in"><h4>29. Contatti Locali</h4><p>Conoscenze dirette con strutture locali</p></div>
+                <div class="qol-item fade-in"><h4>30. Consigli Personalizzati</h4><p>Raccomandazioni specifiche per la vostra moto</p></div>
+                <div class="qol-item fade-in"><h4>31. Adattabilità</h4><p>Il tour si adatta al vostro livello</p></div>
+                <div class="qol-item fade-in"><h4>32. Distanze Conosciute</h4><p>Sapete esattamente quanto guidare</p></div>
+                <div class="qol-item fade-in"><h4>33. Velocità Moderata</h4><p>Ritmo sostenibile per il divertimento</p></div>
+                <div class="qol-item fade-in"><h4>34. Sicurezza Prima</h4><p>Protocolli di sicurezza rigorosi</p></div>
+                <div class="qol-item fade-in"><h4>35. Corse Variate</h4><p>Mix di strade diverse</p></div>
+                <div class="qol-item fade-in"><h4>36. Viste Spettacolari</h4><p>Paesaggi che lasciano senza fiato</p></div>
+                <div class="qol-item fade-in"><h4>37. Cultura Locale</h4><p>Immersione nella cultura dolomitica</p></div>
+                <div class="qol-item fade-in"><h4>38. Cibo Autentico</h4><p>Piatti tradizionali in rifugi autentici</p></div>
+                <div class="qol-item fade-in"><h4>39. Alloggi Confortevoli</h4><p>Camere spaziose e ben arredate</p></div>
+                <div class="qol-item fade-in"><h4>40. Garage Custodia</h4><p>Le vostre moto al sicuro di notte</p></div>
+                <div class="qol-item fade-in"><h4>41. Colazione Abbondante</h4><p>Ricarica energetica prima di partire</p></div>
+                <div class="qol-item fade-in"><h4>42. Cena Rilassante</h4><p>Tempo per socializzare e riposare</p></div>
+                <div class="qol-item fade-in"><h4>43. Bevande Incluse</h4><p>Acqua e bevande durante il tour</p></div>
+                <div class="qol-item fade-in"><h4>44. Snack Energetici</h4><p>Rifornimenti forniti alle pause</p></div>
+                <div class="qol-item fade-in"><h4>45. WiFi negli Hotel</h4><p>Connessione in tutte le strutture</p></div>
+                <div class="qol-item fade-in"><h4>46. Parcheggi Sicuri</h4><p>Moto parcheggiate in zone controllate</p></div>
+                <div class="qol-item fade-in"><h4>47. Mappe Cartacee</h4><p>Backup digitale incluso</p></div>
+                <div class="qol-item fade-in"><h4>48. Cavi di Ricarica</h4><p>Stazioni di ricarica disponibili</p></div>
+                <div class="qol-item fade-in"><h4>49. Pronto Soccorso</h4><p>Kit medico completo a bordo</p></div>
+                <div class="qol-item fade-in"><h4>50. Comunicazione Gruppo</h4><p>Frequenza radio per stare in contatto</p></div>
+                <div class="qol-item fade-in"><h4>51. Indicazioni Chiare</h4><p>Segnaletica e istruzioni precise</p></div>
+                <div class="qol-item fade-in"><h4>52. Orari Rispettati</h4><p>Puntualità garantita</p></div>
+                <div class="qol-item fade-in"><h4>53. Flessibilità</h4><p>Possibilità di piccole variazioni</p></div>
+                <div class="qol-item fade-in"><h4>54. Assistenza Linguistica</h4><p>Guida multilingue disponibile</p></div>
+                <div class="qol-item fade-in"><h4>55. Informazioni Storiche</h4><p>Aneddoti e storia dei luoghi</p></div>
+                <div class="qol-item fade-in"><h4>56. Fotografie Spot</h4><p>Soste fotografiche nei migliori punti</p></div>
+                <div class="qol-item fade-in"><h4>57. Video 4K</h4><p>Riprese professionali ad alta risoluzione</p></div>
+                <div class="qol-item fade-in"><h4>58. Drone Footage</h4><p>Riprese aeree esclusive</p></div>
+                <div class="qol-item fade-in"><h4>59. Editing Professionale</h4><p>Video montato e consegnato</p></div>
+                <div class="qol-item fade-in"><h4>60. Album Fotografico</h4><p>Foto stampabili e digitali</p></div>
+                <div class="qol-item fade-in"><h4>61. Social Media Ready</h4><p>Contenuti per i vostri profili</p></div>
+                <div class="qol-item fade-in"><h4>62. Certificato Personalizzato</h4><p>Con nome e data</p></div>
+                <div class="qol-item fade-in"><h4>63. Newsletter Esclusiva</h4><p>Aggiornamenti su nuovi tour</p></div>
+                <div class="qol-item fade-in"><h4>64. Sconti Fedeltà</h4><p>Riduzioni per tour futuri</p></div>
+                <div class="qol-item fade-in"><h4>65. Referral Program</h4><p>Guadagna portando amici</p></div>
+                <div class="qol-item fade-in"><h4>66. Prenotazioni Facili</h4><p>Sistema semplificato</p></div>
+                <div class="qol-item fade-in"><h4>67. Pagamento Flessibile</h4><p>Opzioni di pagamento varie</p></div>
+                <div class="qol-item fade-in"><h4>68. Cancellazione Facile</h4><p>Politica cancellazione flessibile</p></div>
+                <div class="qol-item fade-in"><h4>69. Rimborso Garantito</h4><p>In caso di necessità</p></div>
+                <div class="qol-item fade-in"><h4>70. Assistenza Pre-Tour</h4><p>Supporto nella preparazione</p></div>
+                <div class="qol-item fade-in"><h4>71. Lista Equipaggiamento</h4><p>Guida su cosa portare</p></div>
+                <div class="qol-item fade-in"><h4>72. Consigli sulla Moto</h4><p>Preparazione del mezzo</p></div>
+                <div class="qol-item fade-in"><h4>73. Controllo Meccanico</h4><p>Verifica pre-tour disponibile</p></div>
+                <div class="qol-item fade-in"><h4>74. Pezzi di Ricambio</h4><p>Disponibilità nel van</p></div>
+                <div class="qol-item fade-in"><h4>75. Attrezzature di Sicurezza</h4><p>Elmetti e protezioni verificate</p></div>
+                <div class="qol-item fade-in"><h4>76. Giubbotti Catarifrangenti</h4><p>Per visibilità e sicurezza</p></div>
+                <div class="qol-item fade-in"><h4>77. Manuale Rider</h4><p>Guida completa del tour</p></div>
+                <div class="qol-item fade-in"><h4>78. FAQ Complete</h4><p>Risposte a tutte le domande</p></div>
+                <div class="qol-item fade-in"><h4>79. Chat di Supporto</h4><p>Contatto rapido con il team</p></div>
+                <div class="qol-item fade-in"><h4>80. Numero di Emergenza</h4><p>Disponibile 24/7</p></div>
+                <div class="qol-item fade-in"><h4>81. Assicurazione Premium</h4><p>Opzioni di copertura estesa</p></div>
+                <div class="qol-item fade-in"><h4>82. Annullamento Meteo</h4><p>Rimborso se meteo avverso</p></div>
+                <div class="qol-item fade-in"><h4>83. Copertura Infortuni</h4><p>Protezione additiva disponibile</p></div>
+                <div class="qol-item fade-in"><h4>84. Responsabilità Civile</h4><p>Inclusa nel pacchetto</p></div>
+                <div class="qol-item fade-in"><h4>85. Protezione Bagaglio</h4><p>Copertura per i vostri effetti</p></div>
+                <div class="qol-item fade-in"><h4>86. Ritardo Voli</h4><p>Opzione rimborso disponibile</p></div>
+                <div class="qol-item fade-in"><h4>87. Garanzia Soddisfazione</h4><p>Soddisfa o rimborsato</p></div>
+                <div class="qol-item fade-in"><h4>88. Tour Eco-Friendly</h4><p>Pratiche sostenibili</p></div>
+                <div class="qol-item fade-in"><h4>89. Carbon Offset</h4><p>Compensazione ambientale</p></div>
+                <div class="qol-item fade-in"><h4>90. Tour Inclusivi</h4><p>Accessibilità per tutti</p></div>
+                <div class="qol-item fade-in"><h4>91. Corsi di Guida</h4><p>Coaching durante il tour</p></div>
+                <div class="qol-item fade-in"><h4>92. Certificazione Abilità</h4><p>Riconoscimento delle competenze</p></div>
+                <div class="qol-item fade-in"><h4>93. Networking Rider</h4><p>Contatti con altri appassionati</p></div>
+                <div class="qol-item fade-in"><h4>94. Blog Esclusivo</h4><p>Articoli e storie dei tour</p></div>
+                <div class="qol-item fade-in"><h4>95. Podcast Rider</h4><p>Interviste e racconti</p></div>
+                <div class="qol-item fade-in"><h4>96. Meetup Annuali</h4><p>Raduno della comunità</p></div>
+                <div class="qol-item fade-in"><h4>97. Collaborazioni Brand</h4><p>Sconti esclusivi per rider</p></div>
+                <div class="qol-item fade-in"><h4>98. Merchandise Esclusivo</h4><p>T-shirt, cappellini, adesivi</p></div>
+                <div class="qol-item fade-in"><h4>99. App Mobile</h4><p>Per organizzare il vostro tour</p></div>
+                <div class="qol-item fade-in"><h4>100. Garanzia Lealtà</h4><p>Impegnati per la vostra felicità</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOUNDERS SECTION -->
+    <section id="founders">
+        <div class="container">
+            <h2>I Nostri Fondatori</h2>
+            <p style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 3rem; font-size: 1.1rem;">
+                Cinque appassionati di moto che condividono la visione di creare esperienze premium indimenticabili
+            </p>
+            <div class="founders-grid">
+                <div class="founder-card fade-in">
+                    <div class="founder-image">
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 4rem; background: linear-gradient(135deg, var(--primary), var(--accent));">
+                            🏍️
+                        </div>
+                    </div>
+                    <div class="founder-info">
+                        <h3>Mashaal</h3>
+                        <p>Co-Fondatore & Visione</p>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Esperto di business e strategia</p>
+                    </div>
+                </div>
+
+                <div class="founder-card fade-in" style="animation-delay: 0.1s;">
+                    <div class="founder-image">
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 4rem; background: linear-gradient(135deg, var(--accent), var(--primary));">
+                            🏍️
+                        </div>
+                    </div>
+                    <div class="founder-info">
+                        <h3>Annab</h3>
+                        <p>Co-Fondatore & Operazioni</p>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Gestione tour e logistica</p>
+                    </div>
+                </div>
+
+                <div class="founder-card fade-in" style="animation-delay: 0.2s;">
+                    <div class="founder-image">
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 4rem; background: linear-gradient(135deg, var(--primary), var(--accent));">
+                            🏍️
+                        </div>
+                    </div>
+                    <div class="founder-info">
+                        <h3>Volpicelli</h3>
+                        <p>Co-Fondatore & Marketing</p>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Comunicazione e brand</p>
+                    </div>
+                </div>
+
+                <div class="founder-card fade-in" style="animation-delay: 0.3s;">
+                    <div class="founder-image">
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 4rem; background: linear-gradient(135deg, var(--accent), var(--primary));">
+                            🏍️
+                        </div>
+                    </div>
+                    <div class="founder-info">
+                        <h3>Ximenes</h3>
+                        <p>Co-Fondatore & Tecnologia</p>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Sviluppo piattaforme digitali</p>
+                    </div>
+                </div>
+
+                <div class="founder-card fade-in" style="animation-delay: 0.4s;">
+                    <div class="founder-image">
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 4rem; background: linear-gradient(135deg, var(--primary), var(--accent));">
+                            🏍️
+                        </div>
+                    </div>
+                    <div class="founder-info">
+                        <h3>Bianchi</h3>
+                        <p>Co-Fondatore & Guide Tecniche</p>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Istruttore di guida certificato</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOOKING SECTION -->
+    <section id="book">
+        <div class="container">
+            <h2>Prenota il Tuo Tour</h2>
+            <div class="booking-form">
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label for="name">Nome Completo *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Telefono *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tour">Seleziona Tour *</label>
+                        <select id="tour" name="tour" required>
+                            <option value="">-- Scegli un tour --</option>
+                            <option value="3days">Passi Epici (3 Giorni) - € 895</option>
+                            <option value="5days">Dolomiti Extreme (5 Giorni) - € 1.495</option>
+                            <option value="7days">Luxury Alpine Ride (7 Giorni) - € 2.495</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Data Preferita *</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="participants">Numero Partecipanti (max 8) *</label>
+                        <input type="number" id="participants" name="participants" min="1" max="8" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="motorcycle">Marca/Modello Moto *</label>
+                        <input type="text" id="motorcycle" name="motorcycle" placeholder="Es: Ducati Panigale" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Richieste Speciali</label>
+                        <textarea id="message" name="message" placeholder="Allergie, esigenze particolari, ecc."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Completa Prenotazione</button>
+                </form>
+                <div id="successMessage" style="display: none; background: #d4edda; color: #155724; padding: 1rem; border-radius: 8px; margin-top: 1rem; border: 1px solid #c3e6cb;">
+                    ✓ Prenotazione ricevuta! Vi contatteremo entro 24 ore.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact">
+        <div class="container">
+            <h2>Contattaci</h2>
+            <div class="contact-info">
+                <div class="contact-card fade-in">
+                    <div class="contact-icon">📞</div>
+                    <h3>Telefono</h3>
+                    <p><strong>+39 (0)436 123456</strong></p>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">Lun-Dom 8:00-20:00</p>
+                </div>
+
+                <div class="contact-card fade-in" style="animation-delay: 0.1s;">
+                    <div class="contact-icon">✉️</div>
+                    <h3>Email</h3>
+                    <p><strong>info@dolomitiadventureride.it</strong></p>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">Rispondiamo entro 24 ore</p>
+                </div>
+
+                <div class="contact-card fade-in" style="animation-delay: 0.2s;">
+                    <div class="contact-icon">📍</div>
+                    <h3>Sede Principale</h3>
+                    <p><strong>Dolomiti, Veneto</strong></p>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">Nel cuore delle Dolomiti</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
     <footer>
-        <p>&copy; 2026 Dolomiti Adventure Ride. All rights reserved.</p>
+        <p>&copy; 2026 Dolomiti Adventure Ride. Tutti i diritti riservati.</p>
+        <p style="margin-top: 1rem; opacity: 0.8;">
+            <a href="#">Privacy Policy</a> | 
+            <a href="#">Termini di Servizio</a> | 
+            <a href="#">Contatti</a>
+        </p>
+        <p style="font-size: 0.95rem; margin-top: 1.5rem; font-style: italic;">
+            🏍️ "Vivi le Dolomiti come un vero Rider" 🏍️
+        </p>
     </footer>
+
+    <script>
+        // HAMBURGER MENU
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        document.querySelectorAll('#navMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // SCROLL ANIMATIONS
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('fade-in');
+                    }, index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // BOOKING FORM
+        document.getElementById('bookingForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                tour: document.getElementById('tour').value,
+                date: document.getElementById('date').value,
+                participants: document.getElementById('participants').value,
+                motorcycle: document.getElementById('motorcycle').value,
+                message: document.getElementById('message').value,
+                timestamp: new Date().toISOString()
+            };
+
+            const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+            bookings.push(formData);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+
+            document.getElementById('bookingForm').reset();
+            document.getElementById('successMessage').style.display = 'block';
+
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 5000);
+
+            console.log('Prenotazione salvata:', formData);
+        });
+    </script>
 </body>
 </html>
