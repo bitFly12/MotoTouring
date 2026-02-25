@@ -4,35 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dolomiti Adventure Ride</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('data:image/png;base64,[insert_base64_carbon_fiber_texture_here]') repeat;
+            color: white;
+        }
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+        nav { 
+            display: flex; 
+            justify-content: space-between; 
+        }
+        .hero {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 3em;
+        }
+        .animated-bike {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: slide 10s infinite;
+        }
+        @keyframes slide {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(0); }
+            100% { transform: translateX(100%); }
+        }
+        section {
+            padding: 50px 20px;
+            text-align: center;
+        }
+        footer {
+            background: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Welcome to Dolomiti Adventure Ride!</h1>
         <nav>
-            <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#routes">Routes</a></li>
-                <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
+            <div><h1>Dolomiti Adventure Ride</h1></div>
+            <div><a href="#" style="color: white">Home</a> | <a href="#" style="color: white">About</a></div>
         </nav>
     </header>
-    <section id="about">
+    <div class="hero">
+        <h1>Join the Adventure</h1>
+        <p>Experience the thrill of riding through the Dolomites!</p>
+        <button style="padding: 10px 20px;">Start Your Journey</button>
+        <img class="animated-bike" src="data:image/png;base64,[insert_base64_bike_image_here]" alt="Animated Motorcycle">
+    </div>
+    <section>
         <h2>About Us</h2>
-        <p>Explore the beautiful Dolomites with our guided adventure rides!</p>
-    </section>
-    <section id="routes">
-        <h2>Our Routes</h2>
-        <p>We offer several breathtaking routes across the Dolomites.</p>
-    </section>
-    <section id="gallery">
-        <h2>Gallery</h2>
-        <p>Check out our amazing photos from previous rides!</p>
-    </section>
-    <section id="contact">
-        <h2>Contact Us</h2>
-        <p>For inquiries, please reach out via our contact form.</p>
+        <p>Dolomiti Adventure Ride offers unforgettable experiences for motorcycle enthusiasts.</p>
     </section>
     <footer>
         <p>&copy; 2026 Dolomiti Adventure Ride. All rights reserved.</p>
